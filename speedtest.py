@@ -859,6 +859,8 @@ class HTTPDownloader(threading.Thread):
                 f.close()
         except IOError:
             pass
+        except HTTP_ERRORS:
+            pass
 
 
 class HTTPUploaderData(object):
@@ -924,7 +926,7 @@ class HTTPUploader(threading.Thread):
         self.request = request
         self.request.data.start = self.starttime = start
         self.size = size
-        self.result = None
+        self.result = 0
         self.timeout = timeout
         self.i = i
 
@@ -959,6 +961,8 @@ class HTTPUploader(threading.Thread):
                 self.result = 0
         except (IOError, SpeedtestUploadTimeout):
             self.result = sum(self.request.data.total)
+        except HTTP_ERRORS:
+            self.result = 0
 
 
 class SpeedtestResults(object):
